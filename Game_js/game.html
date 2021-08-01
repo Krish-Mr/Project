@@ -1,0 +1,192 @@
+<html>
+ <style>
+
+ body{
+   /* background-color: greenyellow; */
+   background-image: url('https://image.freepik.com/free-photo/green-grass-background-textured-top-view-detail-turf-floor-soccer-field_3236-1869.jpg');
+   background-size:contain;
+
+ }
+
+  .start{
+    left: 210px;
+    top: 820px ;
+    background-color: black;
+    color: white;
+    position:relative;
+    font-size:35px;
+    border:6px solid white ;
+  }
+
+  .line{
+    background-color:white;
+    height:35px;
+    width:5px;
+    opacity:1;
+    margin-left: 148px;
+    position:relative;  
+    z-index:1;
+
+   
+  }
+
+  .car{
+    width: 20px;
+    height: 35px;
+    outline-width: 20px;
+    font-size: 40px;
+    /*background-color: yellow; */
+    background-image: url('http://pixeljoint.com/files/icons/racecar.png'); 
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: absolute;
+    top: 630px;
+  }
+  .police{
+     width:20px;
+     height: 40px ;
+    
+     background-image: url('https://pluspng.com/img-png/car-png-top-view-png-free-top-view-png-car-mercedez-381.png');
+     background-size: cover;
+     position: absolute;
+     top: 50px;
+     left: 10px;
+     
+  }
+
+  .area{
+     /*margin-left: 100px;  */
+     width: 300px;
+     background-color: black;
+     color: white;
+     font-size: 20px;
+     height: 760px;
+     position:absolute;
+  }
+ 
+</style>
+
+
+  <body>
+      <inc class="start">Level Up</inc>
+      <div class="area">
+        <pre>S C O R E :</pre>
+       <!-- <div class="line"></div> -->
+      </div>
+  </body>
+
+
+  <script>
+   var count=0;
+   let area=document.querySelector(".area");
+   let start=document.querySelector(".start");
+   start.addEventListener("click",play);   
+      // c a r
+   var car=document.createElement("div");
+   car.classList.add("car"); // (or)car.setAttribute("class","car");
+   area.appendChild(car);    // car.innerHTML="$" ;
+
+      // P O l i C e
+   var police=document.createElement("div");
+   police.classList.add("police");
+   area.appendChild(police);
+  
+
+   const areabound=area.getBoundingClientRect();
+   var carbound=car.getBoundingClientRect();
+   var policebound=police.getBoundingClientRect();
+   
+   
+   var check=true;
+
+              // F U N C T I O N   
+
+  // L I N E
+  do{
+    var lin=document.createElement("pre");
+    lin.setAttribute("class","line");
+    area.appendChild(lin);
+    var linebound=lin.getBoundingClientRect();
+  }while(linebound.y<areabound.height);
+
+   // S T A R T
+   function play(){
+
+    if(check)  {
+       document.addEventListener("keydown",press);
+      //document.addEventListener("keyup",release);
+    }
+    else{ endgame(); }
+
+
+         // P o l i c e   MOVE
+   let mov=()=>setInterval(function(){
+    if( (policebound.y-policebound.height)<areabound.height && policebound.y!==NaN)
+    {police.style.top = (policebound.y += 5 ) +'px';
+     //area.appendChild(police);
+    }  
+    else{ police.style.top=(policebound.y -= areabound.height)+"px";
+     police.style.left = (policebound.x = Math.floor(Math.random()*areabound.width))+'px';}
+   },50) ;  
+   window.requestAnimationFrame(mov);
+  }  //end start function........
+
+   // K E Y 
+   function press(k){
+              //C o ll i d e
+      function isCollide(carbound,policebound) {
+       // Check x and y for overlap
+        if (policebound.x > carbound.width + carbound.x+10
+            || carbound.x > policebound.width + policebound.x 
+            || policebound.y > carbound.height + carbound.y 
+            || carbound.y > policebound.height + policebound.y){ return false; }
+        else{return true;}
+      }
+
+      if(isCollide(carbound,policebound)){ endgame(); }
+
+     // K E Y 
+     k.preventDefault(); 
+     let ke=k.key;          //k.key contain what we press from keyboards
+     console.log(ke+" press");  
+        
+      switch(ke){
+        case "ArrowUp":{car.style.top = (carbound.y -= 5) +'px'};break;
+        case "ArrowDown":{car.style.top = (carbound.y += 5) +'px';break;}
+        case "ArrowLeft":{car.style.left = (carbound.x -= 5) +'px';break}
+        case "ArrowRight":{car.style.left = (carbound.x += 5) +'px';break;}
+        default:endgame();
+      }
+     // car.style.top=carbound.y;
+      //car.style.left=carbound.x;
+
+   }
+   
+   
+   function release(k){
+     k.preventDefault(); 
+     let ke=k.key;         
+     console.log(ke+" release");  
+          
+     if(ke == "ArrowUp"){car.style.top = carbound.y  +'px'}
+   
+     if(ke == "ArrowDown"){car.style.top = carbound.y +'px'}
+   
+     if(ke == "ArrowLeft"){car.style.left = carbound.x +'px'}
+     
+     if(ke == "ArrowRight"){car.style.left = carbound.x +'px'}
+      //car.x=carbound.x;
+     // car.y=carbound.y;
+   }  
+
+   // E N D
+   function endgame(){
+    console.log("E N D");
+    alert("H I T");
+    const check=false;
+   }
+
+  
+  </script>
+</html>
+ 

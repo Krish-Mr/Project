@@ -1,0 +1,150 @@
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<!-- <script src="LocalStorage.js"></script> -->
+<html>
+<head><title>CRUD</title></head>
+
+  <!--: Style -->
+  <style>
+   table{
+   	border: 25px ridge darkgrey;
+   	position: relative;
+   	background-color:palegoldenrod;
+   }
+   .goS{
+      border: 25px ridge darkgrey;
+      position: absolute;
+      left: 360px;
+      top: 200px;
+      background-color:palegoldenrod;
+   }
+
+  </style>
+  <!--: body -->
+  <body ng-app="crud">
+   <form ng-controller="Control1">
+     <table cellpadding="5px" cellspacing="5px">
+     	<tr><td>Name</td><td>Age</td><td>Field</td><td>Experience</td></tr>
+     	<tr>
+     	  <td><input type="text"   ng-model="nam" > </td>  <!-- ng-value="nam" -->
+     	  <td><input type="number" ng-model="age" > </td>
+     	  <td><input type="text"   ng-model="fie" > </td>
+     	  <td><input type="number" ng-model="exp" > </td>
+     	  <td><input type="submit" value="create" ng-model="sub" ng-click="action()"/></td>
+      </tr>
+
+     </table>
+     {{nam}}  {{age}}  {{fie}}  {{exp}}  {{sub}}
+   </form>   <br><hr/>
+
+     <div ng-controller="Control2">  <!-- :read delete update -->
+        <button ng-click="action()"> R E A D</button>
+        <inc ng-show="show" ng-init="show=false">
+           <table cellpadding="5px" cellspacing="5px">                   <!-- ng-repeat="x in obj track by $index" -->
+              <tr ng-repeat="i in local track by $index">  <!--ng-repeat="y in x[$+1].split(',')" ng-init="iter=$index"-->
+                 <td>{{local[$index][1].split(",")[0]}}</td>
+                 <td>{{local[$index][1].split(",")[1]}}</td>
+                 <td>{{local[$index][1].split(",")[2]}}</td>
+                 <td>{{local[$index][1].split(",")[3]}}</td>
+              </tr>
+              <tr><td colspan="4" style="position:relative;left:120px"><input type="submit" value="Go" ng-click="Go()" ng-init="go_show=false"></td></tr>
+           </table>
+        </inc>
+        <!--: go -->
+        <inc class="goS" ng-show="go_show">
+           Name:<input type="text" ng-model="Kvalue"/><button ng-click="up()">Update</button><button ng-click="del()">Delete</button>
+           <!-- {{Kvalue}} -->
+        </inc>
+        <!--: update -->
+        <inc class="goS" style="top:300px" ng-init="up_show=false" ng-show="up_show">{{Kvalue}}
+                 <table cellpadding="2px" cellspacing="2px">
+                     <tr><td>Name</td><td>Age</td><td>Field</td><td>Experience</td></tr>
+                     <tr>
+                       <td><input type="text"   ng-model="namU" > </td>  <!-- //ng-value="nam" -->
+                       <td><input type="number" ng-model="ageU" > </td>
+                       <td><input type="text"   ng-model="fieU" > </td>
+                       <td><input type="number" ng-model="expU" > </td>
+                       <td><input type="submit" value="update" ng-click="update()"/></td>
+                     </tr>
+                  </table> 
+        </inc>
+      
+     </div>
+  </body>
+</html>
+
+<!--: JS -->
+<script>
+var crud=angular.module("crud",[]);
+crud.controller("Control1",function($scope){
+   $scope.action=function action(){
+     // C R E A T E
+      function create(val){
+          localStorage.setItem($scope.nam,val); 
+          console.log("Created :",val);         
+      }
+      if( $scope.nam && $scope.age && $scope.fie && $scope.exp ){
+         let val=[$scope.nam,$scope.age,$scope.fie,$scope.exp];
+         create(val);
+      }
+   };
+
+});
+
+   crud.controller("Control2",function($scope){
+         $scope.action=function (){           
+             $scope.show=!$scope.show;
+             obj=Object.entries(localStorage);
+             $scope.local=obj;
+//  G O     
+             $scope.Go=function Go(){
+               $scope.go_show=!$scope.go_show;
+               console.log("Click Go");
+             }
+// D e l
+             $scope.del=function del(){
+               var val=$scope.Kvalue;
+               console.log("D E L E T E -->",val);
+                for(i=0;i<obj.length;i++){
+                  if(val==obj[i][0])
+                     localStorage.removeItem(val);
+                  else alert("Not Found");
+                  
+                }
+               
+             }
+
+             $scope.up=function up() {
+                console.log("update");
+                $scope.up_show=false;
+                var val=$scope.Kvalue;
+                if(val){
+                  $scope.up_show=true;
+                  console.log(val);
+                  for(let i=0;i<obj.length;i++){
+                     if(val==obj[i][0]){
+                        console.log(" F o u n d ! ");
+                        var list=obj[i][1].split(",");
+                         console.log(obj[i][1].split(","));
+
+                         console.log("list",list);
+                         // update
+                          $scope.update=function update(){
+                           console.log(list);        
+                           list[0]=($scope.namU!==undefined)?$scope.namU:list[0];
+                           list[1]=($scope.ageU!==undefined)?$scope.ageU:list[1];
+                           list[2]=($scope.fieU!==undefined)?$scope.fieU:list[2];
+                           list[3]=($scope.expU!==undefined)?$scope.expU:list[3];
+                           console.log("NEW L I S T :",list,"\n KeyValue :-->",val);
+                           localStorage.setItem(val,list);
+                           console.log("F I N I S H E D");
+                           location.reload();    //reload the current page;
+                          }
+                      
+                     } }
+
+                }
+             }        
+                           
+         };
+   });
+</script>

@@ -1,0 +1,69 @@
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+<style>
+
+  button{
+    position: absolute;
+    left: 310px;
+  }
+  .quesS{          /*controller*/
+   	width: 400px;
+     position: absolute;
+   	background-color:lightgoldenrodyellow;
+  }
+</style>
+
+
+<body ng-app="mcq">
+  <div ng-controller="ques"  class="quesS">
+   	
+   	 <form ng-repeat="X in bund track by $index" >
+   	      
+            {{X.Q}}  <br>     <!-- Question -->
+
+   	      <pre ng-repeat="y in X.O"> <input type="radio"  ng-model="X.$index" value={{y}}>{{y}} </pre>  <!-- Option -->
+            {{X.$index}}<!-- User Ticked name={{X.A}}--><br>
+  	         <i ng-show="ans" ng-model="ch=(X.$index==X.A)?1:0"> <!-- Answer --> 
+               Your Mark: {{ch}}
+               <span ng-if="ch" style="color:seagreen;" >Correct Answer: {{X.A}}</span>
+               <span ng-if="ch==0" style="color:darkorange;" >Answer: {{X.A}}</span>
+            </i>    <!-- Answer -->
+  	    <button type="submit" ng-click="ans=!ans" ng-init="ans=false">submit</button>
+       <br>
+  	    <hr/>
+
+   	 </form>
+  </div>
+
+</body>
+</html>
+
+<script>
+	var mcq=angular.module("mcq",[]);
+	mcq.controller("ques" , function($scope){
+     $scope.bund=[
+     {
+       "Q":"what is my name:",
+       "O":['gokul','krishnan','gokulakrishnan','krish'],
+       "A":"krish"
+     },{
+     	"Q":"what is my Goal",
+        "O":['fun','tour','work','nothing'],
+        "A":"nothing"
+     },{
+     	"Q":"what is my dream Job",
+        "O":['CyberSecurity','BugBounty','SoftwareDevloper','DBadmin'],
+        "A":"CyberSecurity"
+     },{
+     	"Q":"choose raja in below option",
+        "O":['cholan','RajaRaja','raja','Raja'],
+        "A":"raja"
+     },{
+     	"Q":"hello how many letters in this word?",
+        "O":['4','2','3','5'],
+        "A":"5"
+     }
+     ];
+  });
+     
+</script>
